@@ -1,7 +1,7 @@
 import { isValidClub, mapClubToConfigName } from "@/lib/unity/config"
 import { authenticateUnity } from "@/lib/unity/auth"
 import { getRemoteConfig } from "@/lib/unity/config"
-import { notFound } from "next/navigation"
+import ClubNotFound from "./club-not-found"
 
 interface ClubPageProps {
   params: Promise<{
@@ -14,7 +14,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
 
   // Valider que le club est autorisé
   if (!isValidClub(club)) {
-    notFound()
+    return <ClubNotFound club={club} />
   }
 
   // Récupérer le token Unity
