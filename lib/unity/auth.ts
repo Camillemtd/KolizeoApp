@@ -2,12 +2,7 @@
  * Fonctions pour l'authentification anonyme Unity
  */
 
-export interface UnityAuthResponse {
-  idToken: string
-  sessionToken: string
-  expiresIn: number
-  userId: string
-}
+import type { UnityAuthResponse } from "./types"
 
 /**
  * Authentifie l'application de manière anonyme avec Unity

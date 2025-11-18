@@ -2,34 +2,51 @@
  * Fonctions pour récupérer les configurations Unity Remote Config
  */
 
-export interface RemoteConfigData {
-  [key: string]: unknown
-}
-
-export interface RemoteConfigResponse {
-  configs: {
-    [key: string]: {
-      type: string
-      value: unknown
-    }
-  }
-}
+import type { ClubConfig } from "./types"
 
 /**
  * Récupère la configuration Unity Remote Config pour un club donné
- * @param accessToken Token d'accès Unity
+ * @param accessToken Token d'accès Unity (idToken)
  * @param configName Nom de la configuration (ex: "MetzHandball_Config", "FcMetz_Config")
- * @returns Les données de configuration
+ * @returns Les données de configuration typées
  */
 export async function getRemoteConfig(
   accessToken: string,
   configName: string
-): Promise<RemoteConfigData> {
-  // TODO: Implémenter la récupération du Remote Config
-  // Utiliser l'API Unity Remote Config avec le token
-  void accessToken
-  void configName
-  throw new Error("Not implemented")
+): Promise<ClubConfig> {
+  const projectId = process.env.UNITY_PROJECT_ID
+
+  if (!projectId) {
+    throw new Error(
+      "UNITY_PROJECT_ID n'est pas défini dans les variables d'environnement"
+    )
+  }
+
+  const url = new URL("https://config.unity3d.com/api/v1/settings")
+  url.searchParams.set("projectId", projectId)
+  url.searchParams.set("key", configName)
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Erreur Remote Config: ${response.status} - ${errorText}`)
+  }
+
+  const data = await response.json()
+
+  const config = data.configs?.settings?.[configName] as ClubConfig | undefined
+
+  if (!config) {
+    throw new Error(`Clé de configuration "${configName}" non trouvée`)
+  }
+
+  return config
 }
 
 /**
