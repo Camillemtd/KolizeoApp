@@ -2,13 +2,23 @@
  * Fonctions pour l'authentification anonyme Unity
  */
 
-import type { UnityAuthResponse } from "./types"
+import type { UnityAuthResponse, TokenCache } from "./types"
+
+let tokenCache: TokenCache | null = null
 
 /**
  * Authentifie l'application de manière anonyme avec Unity
+ * Utilise un cache en mémoire pour éviter les appels API répétés
  * @returns Le token d'accès Unity (idToken)
  */
 export async function authenticateUnity(): Promise<string> {
+  const now = Date.now()
+  const bufferTime = 5 * 60 * 1000
+
+  if (tokenCache && tokenCache.expiresAt > now + bufferTime) {
+    return tokenCache.token
+  }
+
   const projectId = process.env.UNITY_PROJECT_ID
 
   if (!projectId) {
@@ -38,6 +48,13 @@ export async function authenticateUnity(): Promise<string> {
 
   if (!data.idToken) {
     throw new Error("Impossible de récupérer idToken depuis la réponse Unity")
+  }
+
+  const expiresAt = now + data.expiresIn * 1000
+
+  tokenCache = {
+    token: data.idToken,
+    expiresAt,
   }
 
   return data.idToken

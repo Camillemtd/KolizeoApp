@@ -9,6 +9,11 @@ export interface UnityAuthResponse {
   userId: string
 }
 
+export interface TokenCache {
+  token: string
+  expiresAt: number
+}
+
 export interface RemoteConfigData {
   [key: string]: unknown
 }
