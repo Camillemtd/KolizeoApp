@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kolizeo App - Expérience de développement
 
-## Getting Started
+## 📋 Contexte
 
-First, run the development server:
+Application Next.js permettant d'afficher dynamiquement les liens officiels des clubs sportifs via Unity Remote Config.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🎯 Approche et réflexions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Structure du projet
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+J'ai structuré le projet de manière modulaire :
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Séparation des responsabilités** : Logique Unity dans `lib/unity/`, routes API dans `app/api/`, pages dans `app/`
+- **Centralisation des types** : Tous les types TypeScript dans `types.ts`
+- **Composants réutilisables** : Extraction de `ClubNotFound` pour éviter la duplication
 
-## Learn More
+### Choix techniques
 
-To learn more about Next.js, take a look at the following resources:
+**Next.js App Router** : Utilisation des Server Components pour récupérer les données côté serveur sans exposer d'API client.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**TypeScript** : Typage strict pour éviter les erreurs lors de l'intégration avec les APIs Unity.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Tailwind CSS** : Rapidité de développement et cohérence du design.
 
-## Deploy on Vercel
+## 🚧 Difficultés rencontrées
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Structure de la réponse Remote Config
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+La structure de la réponse était différente de ce que j'attendais. La config est imbriquée dans `data.configs.settings[configName]`. J'ai résolu cela en inspectant la réponse JSON complète et en ajustant le parsing.
+
+### Gestion du cache du token
+
+Initialement, je faisais un appel API Unity à chaque requête. J'ai implémenté un cache en mémoire avec vérification de l'expiration et un buffer de 5 minutes avant expiration pour éviter les tokens expirés.
+
+### Loading states
+
+Pendant le chargement, l'utilisateur voyait une page blanche. J'ai ajouté un skeleton loader avec `loading.tsx` de Next.js pour améliorer l'UX.
+
+## 💡 Décisions d'architecture
+
+### Validation des clubs
+
+Validation explicite avec `isValidClub()` pour une meilleure UX et un contrôle total sur les clubs autorisés.
+
+### Page d'erreur personnalisée
+
+Composant `ClubNotFound` au lieu de `notFound()` de Next.js pour afficher les clubs disponibles et faciliter la navigation.
+
+## 🔄 Itérations
+
+1. **Structure basique** : Authentification et récupération de config
+2. **Cache du token** : Optimisation des performances
+3. **Loading states** : Amélioration de l'UX
+4. **Page d'erreur personnalisée** : Meilleure gestion des erreurs
+5. **Séparation des composants** : Meilleure maintenabilité
+
+
+## 🎯 Conclusion
+
+Ce projet m'a permis de faire des choix d'architecture réfléchis et d'itérer pour améliorer l'UX et les performances. Le code est structuré, typé, et prêt pour être étendu.
