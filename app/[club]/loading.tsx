@@ -1,6 +1,12 @@
 export default function ClubLoading() {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800">
+    <div
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(to bottom right, #1f2937, #111827, #1f2937)",
+      }}
+    >
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-12">
         <header className="text-center mb-16 pt-8">
           <div className="h-16 md:h-20 lg:h-24 w-64 md:w-80 mx-auto bg-white/20 rounded-lg animate-pulse mb-4" />
@@ -22,4 +28,3 @@ export default function ClubLoading() {
     </div>
   )
 }
-

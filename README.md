@@ -53,7 +53,16 @@ Composant `ClubNotFound` au lieu de `notFound()` de Next.js pour afficher les cl
 3. **Loading states** : Amélioration de l'UX
 4. **Page d'erreur personnalisée** : Meilleure gestion des erreurs
 5. **Séparation des composants** : Meilleure maintenabilité
+6. **Tests unitaires** : Implémentation de tests avec Jest pour valider la logique métier
 
+## 🧪 Tests
+
+J'ai implémenté des tests unitaires avec Jest pour valider les fonctionnalités principales :
+
+- **Tests de configuration** : Validation de `isValidClub()` et `mapClubToConfigName()` (8 tests)
+- **Tests d'authentification** : Tests avec mocks pour `authenticateUnity()`, incluant la gestion du cache et des erreurs (5 tests)
+
+**13 tests au total**, tous passants. Les tests utilisent des mocks pour simuler les appels API Unity et valider le comportement du cache.
 
 ## 🎯 Conclusion
 
